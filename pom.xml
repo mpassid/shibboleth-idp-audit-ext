@@ -207,6 +207,25 @@ THE SOFTWARE.
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.1.0</version>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <tarLongFileMode>posix</tarLongFileMode>
+                    <descriptor>src/main/assembly/dep.xml</descriptor>
+                    <finalName>shibboleth-idp-authn-shibsp-${project.version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <outputDirectory>target</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
