@@ -212,7 +212,7 @@ THE SOFTWARE.
                 <configuration>
                     <tarLongFileMode>posix</tarLongFileMode>
                     <descriptor>src/main/assembly/dep.xml</descriptor>
-                    <finalName>shibboleth-idp-authn-shibsp-${project.version}</finalName>
+                    <finalName>shibboleth-idp-audit-ext-${project.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <outputDirectory>target</outputDirectory>
                 </configuration>
