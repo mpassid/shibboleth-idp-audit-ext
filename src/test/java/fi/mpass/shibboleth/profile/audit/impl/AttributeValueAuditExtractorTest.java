@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import net.shibboleth.idp.attribute.IdPAttribute;
+import net.shibboleth.idp.attribute.IdPAttributeValue;
 import net.shibboleth.idp.attribute.StringAttributeValue;
 import net.shibboleth.idp.attribute.context.AttributeContext;
 import net.shibboleth.idp.profile.RequestContextBuilder;
@@ -59,7 +60,7 @@ public class AttributeValueAuditExtractorTest {
     protected RequestContext src;
     
     /** The profile context containing the relying party context. */
-    protected ProfileRequestContext<?, ?> prc;
+    protected ProfileRequestContext prc;
     
     /** The relying part context containing the attribute context. */
     protected RelyingPartyContext rp;
@@ -154,11 +155,11 @@ public class AttributeValueAuditExtractorTest {
      * @param values The input for the collection.
      * @return The collection of values.
      */
-    protected Collection<StringAttributeValue> populateValue(String... values) {
+    protected Collection<IdPAttributeValue> populateValue(String... values) {
         if (values == null || values.length == 0) {
             return Collections.emptyList();
         }
-        ArrayList<StringAttributeValue> result = new ArrayList<>();
+        ArrayList<IdPAttributeValue> result = new ArrayList<>();
         for (int i = 0; i < values.length; i++) {
             result.add(new StringAttributeValue(values[i]));
         }

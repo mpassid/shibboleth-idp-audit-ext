@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,16 +42,12 @@ import org.opensaml.profile.context.ProfileRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-
 /** 
  * A {@link Function} that returns the value for the configured attribute ID from an 
  * {@link AttributeContext}. The value will be searched from the unfiltered set of
  * resolved attributes, thus it doesn't have to be distributed to the relying party of
  * the sequence.
  */
-@SuppressWarnings("rawtypes")
 public class AttributeValueAuditExtractor implements Function<ProfileRequestContext,Collection<String>> {
     
     /** Class logger. */
@@ -68,9 +65,11 @@ public class AttributeValueAuditExtractor implements Function<ProfileRequestCont
      * @param attrId The attributeId whose value is returned by this {@link Function}.
      */
     public AttributeValueAuditExtractor(@Nonnull @NotEmpty final String attrId) {
+        
         // Defaults to ProfileRequestContext -> RelyingPartyContext -> AttributeContext.
-        this(Functions.compose(new ChildContextLookup<>(AttributeContext.class),
-                new ChildContextLookup<ProfileRequestContext,RelyingPartyContext>(RelyingPartyContext.class)), attrId);
+        this(new ChildContextLookup<RelyingPartyContext,AttributeContext>(AttributeContext.class).
+                compose(new ChildContextLookup<ProfileRequestContext,RelyingPartyContext>(RelyingPartyContext.class)),
+                attrId);
     }
     
     /**
@@ -91,13 +90,13 @@ public class AttributeValueAuditExtractor implements Function<ProfileRequestCont
     @Nullable public Collection<String> apply(@Nullable final ProfileRequestContext input) {
         final AttributeContext attributeCtx = attributeContextLookupStrategy.apply(input);
         if (attributeCtx != null && attributeCtx.getUnfilteredIdPAttributes().keySet().contains(attributeId)) {
-            final List<IdPAttributeValue<?>> values = 
+            final List<IdPAttributeValue> values = 
                     attributeCtx.getUnfilteredIdPAttributes().get(attributeId).getValues();
             final Collection<String> attributeValue = new ArrayList<String>();
             log.debug("Iterating through the set of {} attribute values", values.size());
             for (int i = 0; i < values.size(); i++) {
-                log.debug("Adding {} to the result collection", values.get(i).getValue());
-                attributeValue.add(values.get(i).getValue().toString());
+                log.debug("Adding {} to the result collection", values.get(i).getNativeValue());
+                attributeValue.add(values.get(i).getNativeValue().toString());
             }
             return attributeValue;
         } else {

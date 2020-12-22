@@ -54,7 +54,7 @@ public class AuthnFlowIdAuditExtractorTest {
     protected RequestContext src;
     
     /** The profile context containing the authentication context. */
-    protected ProfileRequestContext<?, ?> prc;
+    protected ProfileRequestContext prc;
     
     /** The extractor to be tested. */
     protected AuthnFlowIdAuditExtractor authnFlowIdExtractor;
